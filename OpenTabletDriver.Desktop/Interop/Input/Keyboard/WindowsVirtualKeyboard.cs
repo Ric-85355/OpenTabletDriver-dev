@@ -10,9 +10,16 @@ namespace OpenTabletDriver.Desktop.Interop.Input.Keyboard
 
     public class WindowsVirtualKeyboard : IVirtualKeyboard
     {
+        private const uint MAPVK_VK_TO_VSC = 0;
         private static void KeyEvent(string key, bool isPress)
         {
             var vk = EtoKeysymToVK[key];
+            var scanCode = MapVirtualKey((uint)vk, MAPVK_VK_TO_VSC);
+            var flags = KEYEVENTF.SCANCODE;
+
+            if (!isPress)
+                flags |= KEYEVENTF.KEYUP;
+
             var input = new INPUT
             {
                 type = INPUT_TYPE.KEYBD_INPUT,
@@ -20,9 +27,9 @@ namespace OpenTabletDriver.Desktop.Interop.Input.Keyboard
                 {
                     ki = new KEYBDINPUT
                     {
-                        wVk = (short)vk,
-                        wScan = 0,
-                        dwFlags = isPress ? KEYEVENTF.KEYDOWN : KEYEVENTF.KEYUP,
+                        wVk = 0,
+                        wScan = (short)scanCode,
+                        dwFlags = flags,
                         time = 0,
                         dwExtraInfo = UIntPtr.Zero
                     }
@@ -30,7 +37,9 @@ namespace OpenTabletDriver.Desktop.Interop.Input.Keyboard
             };
 
             var inputs = new INPUT[] { input };
-            SendInput((uint)inputs.Length, inputs, INPUT.Size);
+            var result = SendInput((uint)inputs.Length, inputs, INPUT.Size);
+            if (result != inputs.Length)
+                Log.Write("WindowsKeyboard", $"SendInput failed: {result}/{inputs.Length} events inserted", LogLevel.Error);
         }
 
         public void Press(string key)
