@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenTabletDriver.Native.Windows.Input;
 using OpenTabletDriver.Plugin;
 using OpenTabletDriver.Plugin.Platform.Keyboard;
@@ -60,7 +61,7 @@ namespace OpenTabletDriver.Desktop.Interop.Input.Keyboard
 
         public void Release(IEnumerable<string> keys)
         {
-            foreach (var key in keys)
+            foreach (var key in keys.Reverse())
                 KeyEvent(key, false);
         }
 
