@@ -35,6 +35,9 @@ namespace OpenTabletDriver.Native.Windows
         [DllImport("user32.dll")]
         public static extern uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs, int cbSize);
 
+        [DllImport("user32.dll")]
+        public static extern uint MapVirtualKey(uint uCode, uint uMapType);
+
         #endregion
 
         #region Timers
