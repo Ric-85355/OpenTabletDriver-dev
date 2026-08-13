@@ -1,3 +1,6 @@
+# Мои игноры
+gitignore/
+
 # IDE
 .vs/
 .vscode/**
@@ -25,3 +28,5 @@ BenchmarkDotNet.Artifacts/
 # Nix environment
 [Rr]esult
 .data/
+
+
